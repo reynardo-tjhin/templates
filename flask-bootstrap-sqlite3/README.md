@@ -25,6 +25,16 @@
     - `uv add flask`
     - `uv add flask-wtf`: for CSRF protection
 4. Add folders
-    - `mkdir templates`
-    - `mkdir static` - can also split into two folders (`mkdir static\css` and `mkdir static\js`)
-    - `mkidr api` - for RESTful API
+    - `mkdir src` - source folder that contains the source codes/backend logic
+    - `mkdir src\templates`
+    - `mkdir src\static` - can also split into two folders (`mkdir static\css` and `mkdir static\js`)
+5. Create some files
+    - `src\__init__.py` - the app initialisation file
+    - `src\db.py` - backend that connects to the database
+    - `src\auth.py` - a simple authentication
+    - `src\config.py` - the config file
+    - `src\routes.py` - handle the routes
+6. Create backend API folder
+    - `mkdir src\api`
+7. Create database schema
+    - `src\schema.sql`
