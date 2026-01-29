@@ -38,3 +38,7 @@
     - `mkdir src\api`
 7. Create database schema
     - `src\schema.sql`
+    - `src\dummy_data.sql`
+8. Create configuration files
+    - `config.ini`
+    - `.env` - containing secrets, etc.
