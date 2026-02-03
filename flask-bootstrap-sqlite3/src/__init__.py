@@ -7,6 +7,7 @@ from flask_wtf import CSRFProtect
 # load the configuration
 # config.py file will first load configuration from .env file
 from .config import config
+from . import db
 
 # initialise CSRF object for secure post method
 csrf = CSRFProtect()
@@ -35,6 +36,12 @@ def create_app():
         os.makedirs(app.instance_path)
     except OSError:
         pass
+    
+    # register database
+    db.init_app(app=app)
+    
+    # register CSRF protection
+    csrf.init_app(app=app)
 
     # register blueprints
     modules = ["auth", "blog"]
@@ -43,12 +50,8 @@ def create_app():
         # we use the method "import_module" to import directly
         # we will need to update modules list manually
         try:
-            # import the routes
-            module = importlib.import_module(f"src.{module_name}.routes")
-            app.register_blueprint(module.bp)
-
-            # import the APIs
-            module = importlib.import_module(f"src.{module_name}.api")
+            # import the module
+            module = importlib.import_module(f"src.{module_name}")
             app.register_blueprint(module.bp)
 
             print(f"Imported module {module_name}")

@@ -1,5 +1,6 @@
 import sqlite3
 import click
+import datetime
 
 from flask import Flask, current_app, g
 
@@ -55,3 +56,11 @@ def init_db_command():
 def init_app(app: Flask):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+
+
+# The call to sqlite3.register_converter() tells Python how to interpret 
+# timestamp values in the database. We convert the value to a datetime.datetime.
+sqlite3.register_converter(
+    "timestamp", lambda v: datetime.fromisoformat(v.decode())
+)
