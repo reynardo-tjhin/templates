@@ -1,7 +1,7 @@
 import os
 import importlib
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_wtf import CSRFProtect
 
 # load the configuration
@@ -60,6 +60,13 @@ def create_app():
 
         except AttributeError as e:
             print(f"Warning: {e}")
-
+            
+    # print all the URLs registered
     print(app.url_map)
+            
+    # let the app's homepage point to blog
+    @app.route('/')
+    def index():
+        return render_template("blog/home.html")
+    
     return app

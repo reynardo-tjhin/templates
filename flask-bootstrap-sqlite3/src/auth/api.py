@@ -96,3 +96,31 @@ def login():
             "status": "success",
             "message": "user successfully login",
         })
+
+@bp.route("/user", methods=["GET"])
+def user():
+    if (request.method == "GET"):
+        # get user id from session
+        user_id = session.get("user_id")
+        if (user_id is None):
+            return jsonify({
+                "status": "success",
+                "message": "user has not logged in"
+            })
+        
+        # get id and username
+        db = get_db()
+        user = db.execute("SELECT id, username FROM user WHERE id = ?;", (user_id,))
+        if (user is None):
+            return jsonify({
+                "status": "error",
+                "message": f"could not find user with id '{user_id}'",
+            })
+        
+        return jsonify({
+            "status": "success",
+            "message": {
+                "id": user['id'],
+                "username": user['username'],
+            }
+        })
