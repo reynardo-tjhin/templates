@@ -27,7 +27,7 @@ document.getElementById("signInForm").addEventListener('submit', async function 
         });
         const result = await response.json();
 
-        if (result['status'] == "error") {
+        if (result['status'] === "error") {
             // show error
             document.getElementById("signInErrorContainer").classList.remove("d-none");
             document.getElementById("signInErrorSpan").textContent = "ERROR: " + result["message"];
@@ -35,7 +35,7 @@ document.getElementById("signInForm").addEventListener('submit', async function 
             // re-enable sign in button
             document.getElementById("signInButton").disabled = false;
 
-        } else if (result['status'] == 'success') {
+        } else if (result['status'] === 'success') {
             // show success message
             document.getElementById("signInErrorContainer").classList.remove("d-none");
             document.getElementById("signInErrorContainer").classList.remove("border-danger");

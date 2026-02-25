@@ -15,4 +15,4 @@ def register():
 @bp.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('blog.home'))
+    return redirect(url_for('blog.blog_routes.home'))

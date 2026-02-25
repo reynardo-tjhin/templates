@@ -12,7 +12,8 @@ def register():
         # get user's username and password
         data = request.get_json()
         username = data.get('username')
-        password = data.get('password')
+        password1 = data.get('password1')
+        password2 = data.get('password2')
         
         # validation 1: username and password cannot be empty
         if not username:
@@ -20,13 +21,25 @@ def register():
                 "status": "error",
                 "message": "username cannot be empty",
             })
-        elif not password:
+        elif not password1:
             return jsonify({
                 "status": "error",
-                "message": "password cannot be empty",
+                "message": "First Password cannot be empty",
+            })
+        elif not password2:
+            return jsonify({
+                "status": "error",
+                "message": "Second Password cannot be empty",
             })
             
-        # validation 2: username should not exist in the database
+        # validation 2: password1 and password2 must match
+        if (password1 != password2):
+            return jsonify({
+                "status": "error",
+                "message": "First and Second Passwords are not the same",
+            })
+            
+        # validation 3: username should not exist in the database
         db = get_db()
         user = db.execute('SELECT username FROM user WHERE username = ?;', (username,)).fetchone()
         if user:
@@ -35,13 +48,20 @@ def register():
                 "message": "username already exists",
             })
             
+        print(username, password1, password2)
+            
         # insert into the database
         try:
             db.execute(
                 "INSERT INTO user (username, password) VALUES (?, ?);",
-                (username, generate_password_hash(password)),
+                (username, generate_password_hash(password1)),
             )
             db.commit()
+            
+            # insert successful, user still has to relogin
+            # there may be a race condition on who will first insert/read where username = username
+            # therefore, it's better to let the user to relogin
+            
         except Exception as e:
             return jsonify({
                 "status": "error",
@@ -50,7 +70,8 @@ def register():
             
         return jsonify({
             "status": "success",
-            "message": "user successfully added to database",
+            # "message": "user successfully added to database",
+            "message": "please log in again",
         })
         
 @bp.route("/login", methods=["POST"])
