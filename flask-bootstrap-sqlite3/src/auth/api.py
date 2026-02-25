@@ -110,7 +110,7 @@ def user():
         
         # get id and username
         db = get_db()
-        user = db.execute("SELECT id, username FROM user WHERE id = ?;", (user_id,))
+        user = db.execute("SELECT id, username FROM user WHERE id = ?;", (user_id,)).fetchone()
         if (user is None):
             return jsonify({
                 "status": "error",
