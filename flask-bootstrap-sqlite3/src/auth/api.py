@@ -48,8 +48,6 @@ def register():
                 "message": "username already exists",
             })
             
-        print(username, password1, password2)
-            
         # insert into the database
         try:
             db.execute(

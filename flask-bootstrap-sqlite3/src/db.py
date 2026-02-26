@@ -62,5 +62,5 @@ def init_app(app: Flask):
 # The call to sqlite3.register_converter() tells Python how to interpret 
 # timestamp values in the database. We convert the value to a datetime.datetime.
 sqlite3.register_converter(
-    "timestamp", lambda v: datetime.fromisoformat(v.decode())
+    "timestamp", lambda v: datetime.datetime.fromisoformat(v.decode())
 )
