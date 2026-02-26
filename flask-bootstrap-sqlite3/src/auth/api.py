@@ -20,24 +20,24 @@ def register() -> (Response | None):
             return jsonify({
                 "status": "error",
                 "message": "username cannot be empty",
-            })
+            }), 400
         elif not password1:
             return jsonify({
                 "status": "error",
                 "message": "First Password cannot be empty",
-            })
+            }), 400
         elif not password2:
             return jsonify({
                 "status": "error",
                 "message": "Second Password cannot be empty",
-            })
+            }), 400
             
         # validation 2: password1 and password2 must match
         if (password1 != password2):
             return jsonify({
                 "status": "error",
                 "message": "First and Second Passwords are not the same",
-            })
+            }), 400
             
         # validation 3: username should not exist in the database
         db = get_db()
@@ -46,7 +46,7 @@ def register() -> (Response | None):
             return jsonify({
                 "status": "error",
                 "message": "username already exists",
-            })
+            }), 400
             
         # insert into the database
         try:
@@ -64,13 +64,13 @@ def register() -> (Response | None):
             return jsonify({
                 "status": "error",
                 "message": f"Error from execution of db: {e}",
-            })
+            }), 404
             
         return jsonify({
             "status": "success",
             # "message": "user successfully added to database",
             "message": "please log in again",
-        })
+        }), 201
         
 @bp.route("/login", methods=["POST"]) # type: ignore
 def login() -> (Response | None):
@@ -86,21 +86,28 @@ def login() -> (Response | None):
             return jsonify({
                 "status": "error",
                 "message": "username cannot be empty",
-            })
+            }), 400
         elif not password:
             return jsonify({
                 "status": "error",
                 "message": "password cannot be emtpy",
-            })
+            }), 400
             
-        # validation 2: password must match with the database
+        # validation 2: user must exist
         db = get_db()
         user = db.execute("SELECT * FROM user WHERE username = ?;", (username,)).fetchone()
+        if (user is None):
+            return jsonify({
+                "status": "error",
+                "message": "user does not exist",
+            }), 404
+        
+        # validation 3: password must match with the database
         if (not check_password_hash(user['password'], password)):
             return jsonify({
                 "status": "error",
                 "message": "password is incorrect",
-            })
+            }), 400
             
         # perform the login operation
         # session is a dict that stores data across requests. When 
@@ -114,7 +121,7 @@ def login() -> (Response | None):
         return jsonify({
             "status": "success",
             "message": "user successfully login",
-        })
+        }), 200
 
 @bp.route("/user", methods=["GET"]) # type: ignore
 def user() -> (Response | None):
@@ -125,7 +132,7 @@ def user() -> (Response | None):
             return jsonify({
                 "status": "success",
                 "message": "user has not logged in"
-            })
+            }), 401
         
         # get id and username
         db = get_db()
@@ -134,7 +141,7 @@ def user() -> (Response | None):
             return jsonify({
                 "status": "error",
                 "message": f"could not find user with id '{user_id}'",
-            })
+            }), 404
         
         return jsonify({
             "status": "success",
@@ -142,4 +149,4 @@ def user() -> (Response | None):
                 "id": user['id'],
                 "username": user['username'],
             }
-        })
+        }), 200

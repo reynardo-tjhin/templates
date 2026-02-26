@@ -11,6 +11,15 @@ INSERT INTO user (username, password) VALUES (
 );
 
 -- define a new post
--- INSERT INTO post (author_id, created, title, body) VALUES (
+INSERT INTO post (author_id, title, body) VALUES (
+    1,
+    "First post!",
+    "Hello, World!"
+);
 
--- );
+-- define a new post
+INSERT INTO post (author_id, title, body) VALUES (
+    1,
+    "New Post!",
+    "What am I!?"
+);
