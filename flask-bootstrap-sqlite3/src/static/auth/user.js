@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         const resp = await fetch("/api/v1/auth/user", {
-            "method": "GET",
+            method: "GET",
             headers: {
                 'Content-Type': 'application/json',
             }
