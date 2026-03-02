@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Post{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<main class="container">
+    <h1>Create a New Post!</h1>
+
+    <form method="post" id="createPostForm">
+
+        <!-- CSRF token for safe post -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" id="createPostCSRFToken" />
+
+        <label for="title">Title</label>
+        <input name="title" id="title" value="Insert Title" requried>
+
+        <label for="body">Body</label>
+        <textarea name="body" id="body">Insert Body</textarea>
+
+        <input type="submit" value="Save" id="createPostButton">
+    </form>
+</main>
+{% endblock %}
+
+{% block after %}
+<script src="{{ url_for('static', filename='blog/createPost.js') }}"></script>
+{% endblock %}
