@@ -8,7 +8,7 @@
 
 {% block content %}
 <main class="container">
-    <h1>Create a New Post!</h1>
+    <h1>{{ title }}</h1>
 
     <form method="post" id="createPostForm">
 
@@ -28,4 +28,5 @@
 
 {% block after %}
 <script src="{{ url_for('static', filename='blog/createPost.js') }}"></script>
+<script src="{{ url_for('static', filename='blog/getPost.js') }}"></script>
 {% endblock %}

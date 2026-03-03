@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const editButton = document.createElement("a");
                 editButton.id = "editButton";
                 editButton.textContent = "Edit";
-                editButton.href = "#";
+                editButton.href = "/blog/update/" + post.id;
                 editButton.classList.add("action");
                 header.appendChild(editButton);
             }
