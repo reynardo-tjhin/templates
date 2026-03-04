@@ -14,6 +14,22 @@ async function fetchUser() {
     }
 }
 
+async function fetchCSRFToken() {
+    try {
+        const resp = await fetch("/api/v1/auth/csrf-token", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const res = await resp.json();
+        console.log(res.message);
+
+    } catch (error) {
+        console.error("Error fetching from '/api/v1/auth/csrf-token': " + error);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         // if signed in, create 
@@ -67,6 +83,8 @@ document.addEventListener("DOMContentLoaded", async function () {
                 editButton.href = "/blog/update/" + post.id;
                 editButton.classList.add("action");
                 header.appendChild(editButton);
+
+                fetchCSRFToken();
             }
 
             const body = document.createElement("p");

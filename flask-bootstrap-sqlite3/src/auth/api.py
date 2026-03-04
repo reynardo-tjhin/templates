@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request, session, Response
+from flask import Blueprint, jsonify, request, session, Response, g
+from flask_wtf.csrf import generate_csrf
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from src.db import get_db
@@ -150,3 +151,26 @@ def user() -> (Response | None):
                 "username": user['username'],
             }
         }), 200
+        
+@bp.route("/csrf-token", methods=["GET"])
+def get_csrf_token():
+    """
+    Get a new CSRF token
+    """
+    # user is not signed in
+    if (g.user is None):
+        return jsonify({
+            "status": "error",
+            "message": "Authentication required"
+        }), 401
+        
+    # generate CSRF token and store it in Flask's session
+    # CSRF token is unique per session
+    generate_csrf()
+    
+    # get the CSRF token from session
+    csrf_token = session.get("csrf_token")
+    return jsonify({
+        "status": "ok",
+        "message": csrf_token,
+    })
