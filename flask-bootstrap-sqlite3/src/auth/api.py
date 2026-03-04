@@ -166,11 +166,14 @@ def get_csrf_token():
         
     # generate CSRF token and store it in Flask's session
     # CSRF token is unique per session
-    generate_csrf()
+    # generated per-session and stored in the session
+    # not tied to a specific user account
+    signed_csrf_token = generate_csrf() # returns the signed token
+    # the same with g.csrf_token
     
     # get the CSRF token from session
-    csrf_token = session.get("csrf_token")
+    # session.get("csrf_token") stores the real token
     return jsonify({
         "status": "ok",
-        "message": csrf_token,
+        "message": signed_csrf_token,
     })
