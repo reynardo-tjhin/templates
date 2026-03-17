@@ -5,10 +5,7 @@ document.getElementById("signUpForm").addEventListener('submit', async function 
 
     const form = event.target;
     const formData = new FormData(form);
-    var obj = {};
-    formData.forEach(function (value, key) {
-        obj[key] = value;
-    });
+    const obj = Object.fromEntries(formData);
     var json = JSON.stringify(obj);
 
     try {
@@ -22,17 +19,22 @@ document.getElementById("signUpForm").addEventListener('submit', async function 
             },
             body: json,
         });
-        const result = await response.json();
 
-        if (result['status'] === 'error') {
+        // response statuses return: 400 and 404
+        if (!response.ok) {
+
             // show error
             document.getElementById("signUpErrorContainer").classList.remove("d-none");
             document.getElementById("signUpErrorSpan").textContent = "ERROR: " + result["message"];
 
             // re-enable sign in button
             submitButton.disabled = false;
+        }
 
-        } else if (result['status'] === 'success') {
+        // response statuses return: success and unexpected error
+        const result = await response.json();
+        if (result['status'] === 'success') {
+
             // show success message
             document.getElementById("signUpErrorContainer").classList.remove("d-none");
             document.getElementById("signUpErrorContainer").classList.remove("border-danger");

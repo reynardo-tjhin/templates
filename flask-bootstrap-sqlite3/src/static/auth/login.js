@@ -7,10 +7,7 @@ document.getElementById("signInForm").addEventListener('submit', async function 
     // get the sign in details
     const form = event.target;
     const formData = new FormData(form);
-    var obj = {};
-    formData.forEach(function (value, key) {
-        obj[key] = value;
-    });
+    const obj = Object.fromEntries(formData);
     const json = JSON.stringify(obj);
 
     // perform an async request
@@ -25,17 +22,22 @@ document.getElementById("signInForm").addEventListener('submit', async function 
             },
             body: json,
         });
-        const result = await response.json();
 
-        if (result['status'] === "error") {
+        // response status: 400 and 404
+        if (!response.ok) {
+
             // show error
             document.getElementById("signInErrorContainer").classList.remove("d-none");
             document.getElementById("signInErrorSpan").textContent = "ERROR: " + result["message"];
 
             // re-enable sign in button
             document.getElementById("signInButton").disabled = false;
+        }
 
-        } else if (result['status'] === 'success') {
+        // successful result and unknown result
+        const result = await response.json();
+        if (result['status'] === 'success') {
+            
             // show success message
             document.getElementById("signInErrorContainer").classList.remove("d-none");
             document.getElementById("signInErrorContainer").classList.remove("border-danger");

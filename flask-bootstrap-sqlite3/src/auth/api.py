@@ -100,7 +100,7 @@ def login() -> (Response | None):
         if (user is None):
             return jsonify({
                 "status": "error",
-                "message": "user does not exist",
+                "message": "username does not exist",
             }), 404
         
         # validation 3: password must match with the database
@@ -176,4 +176,5 @@ def get_csrf_token():
     return jsonify({
         "status": "ok",
         "message": signed_csrf_token,
-    })
+    }), 200
+    
