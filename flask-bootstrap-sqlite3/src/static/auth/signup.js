@@ -1,12 +1,15 @@
 document.getElementById("signUpForm").addEventListener('submit', async function (event) {
     event.preventDefault(); // prevent form normal form submission
 
+    // disable submit button
     const submitButton = document.getElementById("signUpButton");
+    submitButton.disabled = true;
 
+    // get form data and parse into JSON format
     const form = event.target;
     const formData = new FormData(form);
     const obj = Object.fromEntries(formData);
-    var json = JSON.stringify(obj);
+    const json = JSON.stringify(obj);
 
     try {
         const url = '/api/v1/auth/register';
@@ -19,6 +22,8 @@ document.getElementById("signUpForm").addEventListener('submit', async function 
             },
             body: json,
         });
+        // response statuses return: success and unexpected error
+        const result = await response.json();
 
         // response statuses return: 400 and 404
         if (!response.ok) {
@@ -27,12 +32,10 @@ document.getElementById("signUpForm").addEventListener('submit', async function 
             document.getElementById("signUpErrorContainer").classList.remove("d-none");
             document.getElementById("signUpErrorSpan").textContent = "ERROR: " + result["message"];
 
-            // re-enable sign in button
-            submitButton.disabled = false;
+            return; // early return so execution stops here
         }
 
-        // response statuses return: success and unexpected error
-        const result = await response.json();
+        // response status returns 200 (or ok)
         if (result['status'] === 'success') {
 
             // show success message
@@ -48,10 +51,22 @@ document.getElementById("signUpForm").addEventListener('submit', async function 
             }, 750); // 0.75 seconds delay to show success
 
         } else {
+
+            // error from the server
+            // result['status'] is not returning 'success'
             console.error("Error from server");
+            document.getElementById("signUpErrorContainer").classList.remove("d-none");
+            document.getElementById("signUpErrorSpan").textContent = "An error occurred. Please contact administrator.";
+
+            // re-enable the submit button
+            submitButton.disabled = false;
         }
 
     } catch (error) {
+
+        // show error
         console.error("AJAX Error: " + error);
+        document.getElementById("signUpErrorContainer").classList.remove("d-none");
+        document.getElementById("signUpErrorSpan").textContent = "A network error occurred. Please try again.";
     }
 });
